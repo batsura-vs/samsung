@@ -13,7 +13,8 @@ import com.voven4ek.geoalarm.viewmodel.MainViewModel
 
 @Composable
 fun Route(
-    model: MainViewModel
+    model: MainViewModel,
+    isPreview: Boolean = false
 ) {
     val text by model.state.collectAsState()
     Text(

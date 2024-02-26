@@ -1,21 +1,15 @@
 package com.voven4ek.geoalarm.ui.components.pages
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,8 +18,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,22 +42,53 @@ import org.osmdroid.views.overlay.Marker
 
 @Composable
 fun Home(
-    model: MainViewModel
+    model: MainViewModel,
+    isPreview: Boolean = false,
+) {
+    var helperActive by remember { mutableStateOf(false) }
+    val helperSize by animateFloatAsState(
+        targetValue = if (helperActive) 0.4f else 2f, label = "helper size"
+    )
+
+
+    MapComponent(
+        modifier = Modifier.fillMaxSize(), model = model, isPreview = isPreview
+    )
+    Column {
+        Spacer(modifier = Modifier.weight(1f))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp))
+                .alpha(0.5f)
+                .background(Color.Black)
+                .clickable {
+                    helperActive = !helperActive
+                },
+        ) {
+            Column (
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(text = "Example")
+            }
+        }
+    }
+}
+
+@Composable
+fun MapComponent(
+    modifier: Modifier, model: MainViewModel = viewModel(), isPreview: Boolean = false
 ) {
     val appState = model.state.collectAsState()
     val geoPoint = appState.value.geoPoint
     val zoom = appState.value.zoom
     val destination = appState.value.destination
-    var mapActive by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        AndroidView(modifier = Modifier
-            .padding(16.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .animateContentSize()
-            .height(if (mapActive) 400.dp else 200.dp), factory = { context ->
+    if (isPreview) {
+        Box(
+            modifier = modifier.background(Color.Green),
+        )
+    } else {
+        AndroidView(modifier = modifier, factory = { context ->
             MapView(context).apply {
                 val marker = Marker(this)
                 marker.title = "Destination"
@@ -104,9 +130,6 @@ fun Home(
                 controller.setCenter(geoPoint)
             }
         })
-        Text(text = "HELLO", modifier = Modifier.clickable {
-            mapActive = !mapActive
-        })
     }
 }
 
@@ -114,6 +137,6 @@ fun Home(
 @Composable
 fun HomePreview() {
     Surface {
-        Home(viewModel())
+        Home(viewModel(), isPreview = true)
     }
 }

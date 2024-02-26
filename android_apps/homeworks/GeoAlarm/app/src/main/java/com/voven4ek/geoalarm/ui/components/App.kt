@@ -25,20 +25,21 @@ import com.voven4ek.geoalarm.ui.theme.GeoAlarmTheme
 import com.voven4ek.geoalarm.viewmodel.MainViewModel
 
 @Composable
-fun AppNavigation(navController: NavHostController, model: MainViewModel) {
+fun AppNavigation(navController: NavHostController, model: MainViewModel, isPreview: Boolean = false) {
     NavHost(navController = navController, "home") {
         composable("home") {
-            Home(model = model)
+            Home(model = model, isPreview = isPreview)
         }
         composable("route") {
-            Route(model = model)
+            Route(model = model, isPreview = isPreview)
         }
     }
 }
 
 @Composable
 fun App(
-    model: MainViewModel = viewModel()
+    model: MainViewModel = viewModel(),
+    isPreview: Boolean = false,
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -69,7 +70,7 @@ fun App(
         Surface(
             modifier = Modifier.padding(innerPadding)
         ) {
-            AppNavigation(navController, model)
+            AppNavigation(navController, model, isPreview = isPreview)
         }
     }
 }
@@ -78,6 +79,6 @@ fun App(
 @Composable
 fun AppPreview() {
     GeoAlarmTheme {
-        App()
+        App(isPreview = true)
     }
 }
