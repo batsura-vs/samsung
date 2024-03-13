@@ -2,6 +2,7 @@ package com.voven4ek.geoalarm.ui.components.pages.home.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,7 +45,10 @@ fun SettingsComponent(
                 .padding(4.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.background.copy(0.95f))
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable {
+                    helperActive = !helperActive
+                },
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -68,14 +72,13 @@ fun SettingsComponent(
                         Icon(Icons.Filled.Menu, contentDescription = "Settings")
                     }
                 }
-                Text(text = "Radius: ${radius.roundToInt()}m", fontSize = MaterialTheme.typography.bodyLarge.fontSize)
-                Slider(value = radius, onValueChange = {value ->
-                    model.updateRadius(value)
-                }, valueRange = 30.0f..200.0f)
                 AnimatedVisibility(visible = helperActive) {
                     Column {
-                        Text(text = "Radius: ${radius.roundToInt()}m", fontSize = MaterialTheme.typography.bodyLarge.fontSize)
-                        Slider(value = radius, onValueChange = {value ->
+                        Text(
+                            text = "Radius: ${radius.roundToInt()}m",
+                            fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                        )
+                        Slider(value = radius, onValueChange = { value ->
                             model.updateRadius(value)
                         }, valueRange = 30.0f..200.0f)
                     }
