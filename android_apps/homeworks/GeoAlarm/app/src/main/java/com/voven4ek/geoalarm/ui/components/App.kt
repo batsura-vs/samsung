@@ -19,8 +19,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.voven4ek.geoalarm.ui.components.pages.Home
-import com.voven4ek.geoalarm.ui.components.pages.Route
+import com.voven4ek.geoalarm.ui.components.pages.home.Home
+import com.voven4ek.geoalarm.ui.components.pages.route.Route
 import com.voven4ek.geoalarm.ui.theme.GeoAlarmTheme
 import com.voven4ek.geoalarm.viewmodel.MainViewModel
 

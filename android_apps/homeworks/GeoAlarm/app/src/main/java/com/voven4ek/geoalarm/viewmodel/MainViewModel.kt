@@ -21,10 +21,15 @@ class MainViewModel : ViewModel() {
     fun updateDestination(destination: GeoPoint) {
         _state.update { currentState -> currentState.copy(destination = destination) }
     }
+
+    fun updateRadius(value: Float) {
+        _state.update { currentState -> currentState.copy(radius = value) }
+    }
 }
 
 data class AppState(
     val geoPoint: GeoPoint = GeoPoint(55.755826, 37.6173),
     val destination: GeoPoint = GeoPoint(55.755826, 37.6173),
-    val zoom: Double = 12.0
+    val zoom: Double = 12.0,
+    val radius: Float = 50f
 )

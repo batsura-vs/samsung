@@ -1,4 +1,4 @@
-package com.voven4ek.geoalarm.ui.components.pages
+package com.voven4ek.geoalarm.ui.components.pages.route
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Surface
