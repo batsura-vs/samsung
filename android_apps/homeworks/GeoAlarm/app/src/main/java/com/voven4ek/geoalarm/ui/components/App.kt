@@ -2,7 +2,6 @@ package com.voven4ek.geoalarm.ui.components
 
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.voven4ek.geoalarm.ui.components.pages.home.Home
+import com.voven4ek.geoalarm.ui.components.pages.login.Login
 import com.voven4ek.geoalarm.ui.components.pages.route.Route
 import com.voven4ek.geoalarm.ui.theme.GeoAlarmTheme
 import com.voven4ek.geoalarm.viewmodel.MainViewModel
@@ -41,7 +41,7 @@ fun AppNavigation(
             Home(model = model, isPreview = isPreview)
         }
         composable("route") {
-            Route(model = model, isPreview = isPreview)
+            Route(model = model)
         }
     }
 }
@@ -75,39 +75,41 @@ fun App(
             }
         }
     }
-    Scaffold(bottomBar = {
-        BottomAppBar(actions = {
-            IconButton(onClick = { navController.navigate("home") }) {
-                Icon(
-                    Icons.Outlined.Home, contentDescription = "Home"
-                )
-            }
-        }, floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    requestPermissions(android.Manifest.permission.ACCESS_FINE_LOCATION) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            requestPermissions(
-                                android.Manifest.permission.POST_NOTIFICATIONS
-                            ) {
+    Login {
+        Scaffold(bottomBar = {
+            BottomAppBar(actions = {
+                IconButton(onClick = { navController.navigate("home") }) {
+                    Icon(
+                        Icons.Outlined.Home, contentDescription = "Home"
+                    )
+                }
+            }, floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        requestPermissions(android.Manifest.permission.ACCESS_FINE_LOCATION) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                requestPermissions(
+                                    android.Manifest.permission.POST_NOTIFICATIONS
+                                ) {
+                                    navController.navigate("route")
+                                }
+                            } else {
                                 navController.navigate("route")
                             }
-                        } else {
-                            navController.navigate("route")
                         }
-                    }
-                }, elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                    }, elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                ) {
+                    Icon(
+                        Icons.Filled.PlayArrow, contentDescription = "Start route"
+                    )
+                }
+            })
+        }) { innerPadding ->
+            Surface(
+                modifier = Modifier.padding(innerPadding)
             ) {
-                Icon(
-                    Icons.Filled.PlayArrow, contentDescription = "Start route"
-                )
+                AppNavigation(navController, model, isPreview = isPreview)
             }
-        })
-    }) { innerPadding ->
-        Surface(
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            AppNavigation(navController, model, isPreview = isPreview)
         }
     }
 }
